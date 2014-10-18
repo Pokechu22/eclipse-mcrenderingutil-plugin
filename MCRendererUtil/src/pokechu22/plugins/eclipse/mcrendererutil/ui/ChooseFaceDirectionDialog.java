@@ -18,6 +18,10 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormAttachment;
 
 public class ChooseFaceDirectionDialog extends TitleAreaDialog {
 	
@@ -28,6 +32,12 @@ public class ChooseFaceDirectionDialog extends TitleAreaDialog {
 	private int lightenFrontTop = 0;
 	private int lightenFrontLeft = 0;
 	private int lightenFrontRight = 0;
+	
+	private Canvas backCanvas;
+	//Lighten values are the color, either 0 or 127.
+	private int lightenBackTop = 0;
+	private int lightenBackLeft = 0;
+	private int lightenBackRight = 0;
 	
 	/**
 	 * Create the dialog.
@@ -50,11 +60,12 @@ public class ChooseFaceDirectionDialog extends TitleAreaDialog {
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		List list = new List(container, SWT.BORDER);
-		list.setItems(new String[] {"Front", "Back", "Left", "Right", "Top", "Bottom"});
-		list.setBounds(10, 10, 123, 132);
+		Group grpFront = new Group(container, SWT.NONE);
+		grpFront.setText("Front");
+		grpFront.setBounds(10, 10, 132, 132);
+		grpFront.setLayout(null);
 		
-		frontCanvas = new Canvas(container, SWT.BORDER);
+		frontCanvas = new Canvas(grpFront, SWT.NONE);
 		frontCanvas.addMouseTrackListener(new MouseTrackAdapter() {
 			@Override
 			public void mouseExit(MouseEvent e) {
@@ -88,10 +99,53 @@ public class ChooseFaceDirectionDialog extends TitleAreaDialog {
 		frontCanvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				
+				//TODO: Put the actual click data here.
 			}
 		});
-		frontCanvas.setBounds(139, 10, 123, 132);
+		frontCanvas.setBounds(13, 25, 109, 97);
+		
+		Group grpBack = new Group(container, SWT.NONE);
+		grpBack.setText("Back");
+		grpBack.setBounds(148, 10, 132, 132);
+		grpBack.setLayout(null);
+		
+		backCanvas = new Canvas(grpBack, SWT.NONE);
+		backCanvas.addMouseTrackListener(new MouseTrackAdapter() {
+			@Override
+			public void mouseExit(MouseEvent e) {
+				//If the cursor is no longer inside everything is deselected.
+				lightenBackTop = 0;
+				lightenBackLeft = 0;
+				lightenBackRight = 0;
+				
+				backCanvas.redraw();
+			}
+		});
+		backCanvas.addMouseMoveListener(new MouseMoveListener() {
+			public void mouseMove(MouseEvent e) {
+				lightenBackTop = ClickSection.TOP.isPointInside(e.x, e.y, backCanvas.getSize().x, backCanvas.getSize().y) ? 127 : 0;
+				lightenBackLeft = ClickSection.LEFT.isPointInside(e.x, e.y, backCanvas.getSize().x, backCanvas.getSize().y) ? 127 : 0;
+				lightenBackRight = ClickSection.RIGHT.isPointInside(e.x, e.y, backCanvas.getSize().x, backCanvas.getSize().y) ? 127 : 0;
+				
+				backCanvas.redraw();
+			}
+		});
+		backCanvas.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent e) {
+				e.gc.setBackground(new Color(shell.getDisplay(), 255, lightenBackTop, lightenBackTop));
+				e.gc.fillPolygon(ClickSection.TOP.getBounds(e.width, e.height));
+				e.gc.setBackground(new Color(shell.getDisplay(), lightenBackRight, 255, lightenBackRight));
+				e.gc.fillPolygon(ClickSection.RIGHT.getBounds(e.width, e.height));
+				e.gc.setBackground(new Color(shell.getDisplay(), lightenBackLeft, lightenBackLeft, 255));
+				e.gc.fillPolygon(ClickSection.LEFT.getBounds(e.width, e.height));
+			}
+		});
+		backCanvas.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				//TODO: Put the actual click data here.
+			}
+		});
+		backCanvas.setBounds(13, 25, 106, 94);
 
 		return area;
 	}
