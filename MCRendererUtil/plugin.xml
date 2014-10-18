@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.jdt.core.IMethod"
+            id="pokechu22.plugins.eclipse.mcrendererutil.contribution1">
+         <menu
+               label="MCRendererUtil"
+               path="additions"
+               id="pokechu22.plugins.eclipse.mcrendererutil.menu1">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="Add face"
+               class="pokechu22.plugins.eclipse.mcrendererutil.popup.actions.AddFace"
+               menubarPath="pokechu22.plugins.eclipse.mcrendererutil.menu1/group1"
+               enablesFor="1"
+               id="pokechu22.plugins.eclipse.mcrendererutil.newAction">
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>
