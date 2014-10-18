@@ -186,7 +186,7 @@ public class ChooseFaceDirectionDialog extends TitleAreaDialog {
 				//if the sum of both x and y is less than 1 (for a diamond 
 				//shape).  It works perfectly.
 				return (Math.abs(x - (xMax / 2.0)) / (xMax / 2.0)) +
-						(Math.abs(y - (xMax / 3.0)) / (xMax / 3.0)) < 1.0; 
+						(Math.abs(y - (yMax / 3.0)) / (yMax / 3.0)) < 1.0; 
 			}
 
 			@Override
