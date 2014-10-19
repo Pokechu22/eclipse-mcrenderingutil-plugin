@@ -74,7 +74,14 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 					xs[2], ys[4],
 					//TopBot and TopLeft
 					xs[1], ys[3],
-					//TODO: Between tops and bottoms.
+					//TopLeft and BotLeft
+					xs[0], ys[5],
+					//TopTop and BotTop
+					xs[2], ys[3],
+					//TopRight and BotRight
+					xs[4], ys[5],
+					//TopBot and BotBot
+					xs[2], ys[7],
 					//BotLeft.
 					xs[0], ys[8],
 					//BotLeft and BotTop
