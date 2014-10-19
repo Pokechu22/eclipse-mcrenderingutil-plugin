@@ -17,14 +17,42 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Button;
 
 public class AdvancedAddFaceDialog extends TitleAreaDialog {
+	
+	/**
+	 * An individual point that can be clicked on.
+	 * 
+	 * @author Pokechu22
+	 *
+	 */
+	public static class ClickPoint {
+		public ClickPoint(int clickedX, int clickedY,
+				double x, double y, double z) {
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.clickedX = (int)clickedX;
+			this.clickedY = (int)clickedY;
+		}
+		
+		@Override
+		public String toString() {
+			return "ClickPoint [x=" + x + ", y=" + y + ", z=" + z
+					+ ", clickedX=" + clickedX + ", clickedY=" + clickedY
+					+ "]";
+		}
+
+		public double x;
+		public double y;
+		public double z;
+		public int clickedX;
+		public int clickedY;
+	}
 	
 	/**
 	 * A canvas for creation of faces.
@@ -33,37 +61,7 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		
 		public ClickPoint[] points = new ClickPoint[4];
 		protected int pointsClicked = 0;
-		
-		/**
-		 * An individual point that can be clicked on.
-		 * 
-		 * @author Pokechu22
-		 *
-		 */
-		public class ClickPoint {
-			public ClickPoint(int clickedX, int clickedY,
-					double x, double y, double z) {
-				this.x = x;
-				this.y = y;
-				this.z = z;
-				this.clickedX = (int)clickedX;
-				this.clickedY = (int)clickedY;
-			}
-			
-			@Override
-			public String toString() {
-				return "ClickPoint [x=" + x + ", y=" + y + ", z=" + z
-						+ ", clickedX=" + clickedX + ", clickedY=" + clickedY
-						+ "]";
-			}
-
-			public double x;
-			public double y;
-			public double z;
-			public int clickedX;
-			public int clickedY;
-		}
-		
+				
 		/**
 		 * The currently chosen point.  If null, don't draw.
 		 */
@@ -308,6 +306,9 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 					table.getItem(i).setText(2, Double.toString(this.points[i].y));
 					table.getItem(i).setText(3, Double.toString(this.points[i].z));
 				}
+				
+				//Enable/disable OK button.
+				getButton(IDialogConstants.OK_ID).setEnabled(pointsClicked == 4);
 			}
 		};
 		
@@ -351,7 +352,7 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		TableItem tableItem_3 = new TableItem(table, SWT.NONE);
 		tableItem_3.setText("4");
 		canvas.setBounds(13, 25, 106, 94);
-
+		
 		return area;
 	}
 
@@ -361,8 +362,9 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
+		Button button = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
 				true);
+		button.setEnabled(false);
 		createButton(parent, IDialogConstants.CANCEL_ID,
 				IDialogConstants.CANCEL_LABEL, false);
 	}
