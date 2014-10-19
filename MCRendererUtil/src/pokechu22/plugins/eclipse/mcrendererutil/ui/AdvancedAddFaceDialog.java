@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.PaintEvent;
@@ -29,13 +30,17 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	 * A canvas for creation of faces.
 	 */
 	protected class FaceCreationCanvas extends Canvas {
+		
+		public ClickPoint[] points = new ClickPoint[4];
+		protected int pointsClicked = 0;
+		
 		/**
 		 * An individual point that can be clicked on.
 		 * 
 		 * @author Pokechu22
 		 *
 		 */
-		protected class ClickPoint {
+		public class ClickPoint {
 			public ClickPoint(int clickedX, int clickedY,
 					double x, double y, double z) {
 				this.x = x;
@@ -167,6 +172,8 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 					
 					e.gc.setBackground(new Color(shell.getDisplay(),
 							0, 0, 0));
+					e.gc.setForeground(new Color(shell.getDisplay(),
+							0, 0, 0));
 					
 					//Top square
 					e.gc.drawPolygon(new int[] {
@@ -197,6 +204,15 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 					//Circle for current point.
 					if (clicked != null) {
 						e.gc.fillOval(clicked.clickedX - 6, clicked.clickedY - 6, 12, 12);
+					}
+					
+					//Clicked points.
+					e.gc.setForeground(new Color(shell.getDisplay(),
+							63, 63, 63));
+					for (int i = 0; i < pointsClicked; i++) {
+						e.gc.fillOval(points[i].clickedX - 6, points[i].clickedY - 6, 12, 12);
+						e.gc.drawLine(points[i].clickedX, points[i].clickedY, 
+								points[(i + 1) % pointsClicked].clickedX, points[(i + 1) % pointsClicked].clickedY);
 					}
 				}
 			});
@@ -229,7 +245,27 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 					redraw();
 				}
 			});
+			
+			this.addMouseListener(new MouseAdapter() {
+				public void mouseDown(MouseEvent e) {
+					if (clicked != null) {
+						if (pointsClicked < 4) {
+							points[pointsClicked] = clicked;
+							pointsClicked++;
+							redraw();
+							
+							onPointsChange();
+						}
+					}
+				}
+			});
 		}
+		
+		/**
+		 * Called when the points are changed.
+		 * @param point
+		 */
+		protected void onPointsChange() {}
 	}
 	
 	private final Shell shell;
@@ -264,15 +300,23 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		grpChoosePoints.setBounds(10, 10, 132, 132);
 		grpChoosePoints.setLayout(null);
 		
-		canvas = new FaceCreationCanvas(grpChoosePoints, SWT.NONE);
+		canvas = new FaceCreationCanvas(grpChoosePoints, SWT.NONE) {
+			@Override
+			protected void onPointsChange() {
+				for (int i = 0; i < this.pointsClicked; i++) {
+					table.getItem(i).setText(1, Double.toString(this.points[i].x));
+					table.getItem(i).setText(2, Double.toString(this.points[i].y));
+					table.getItem(i).setText(3, Double.toString(this.points[i].z));
+				}
+			}
+		};
 		
 		Group grpResult = new Group(container, SWT.NONE);
 		grpResult.setText("Result");
 		grpResult.setBounds(148, 10, 286, 132);
 		grpResult.setLayout(null);
 		
-		table = new Table(grpResult, SWT.BORDER | SWT.FULL_SELECTION);
-		table.setEnabled(false);
+		table = new Table(grpResult, SWT.BORDER | SWT.VIRTUAL);
 		table.setBounds(10, 19, 265, 104);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
