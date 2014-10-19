@@ -4,13 +4,13 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -215,6 +215,13 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 					redraw();
 				}
 			});
+			
+			this.addMouseTrackListener(new MouseTrackAdapter() {
+				public void mouseExit(MouseEvent e) {
+					clicked = null;
+					redraw();
+				}
+			});
 		}
 	}
 	
@@ -268,5 +275,4 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	protected Point getInitialSize() {
 		return new Point(450, 300);
 	}
-
 }
