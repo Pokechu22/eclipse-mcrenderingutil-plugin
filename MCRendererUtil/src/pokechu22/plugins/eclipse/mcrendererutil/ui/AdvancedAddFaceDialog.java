@@ -15,6 +15,10 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormAttachment;
 
 public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	
@@ -250,8 +254,14 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		canvas = new FaceCreationCanvas(container, SWT.BORDER);
-		canvas.setBounds(10, 10, 132, 132);
+		//Custom control inside which doesn't like rendering ;(
+		Group grpChoosePoints = new Group(container, SWT.NONE);
+		grpChoosePoints.setText("Choose Points");
+		grpChoosePoints.setBounds(10, 10, 132, 132);
+		grpChoosePoints.setLayout(null);
+		
+		canvas = new FaceCreationCanvas(grpChoosePoints, SWT.NONE);
+		canvas.setBounds(13, 25, 106, 94);
 
 		return area;
 	}
