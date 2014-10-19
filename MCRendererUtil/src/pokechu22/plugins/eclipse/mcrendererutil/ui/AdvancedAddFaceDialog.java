@@ -376,4 +376,15 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	protected Point getInitialSize() {
 		return new Point(450, 300);
 	}
+	
+	/**
+	 * Gets the resulting 4 ClickPoints.
+	 * @return
+	 */
+	public ClickPoint[] getResult() {
+		if (canvas.pointsClicked != 4) {
+			return null;
+		}
+		return canvas.points;
+	}
 }
