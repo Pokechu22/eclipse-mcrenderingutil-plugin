@@ -19,6 +19,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 
 public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	
@@ -232,6 +235,7 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	private final Shell shell;
 	
 	private FaceCreationCanvas canvas;
+	private Table table;
 	
 	/**
 	 * Create the dialog.
@@ -261,6 +265,47 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		grpChoosePoints.setLayout(null);
 		
 		canvas = new FaceCreationCanvas(grpChoosePoints, SWT.NONE);
+		
+		Group grpResult = new Group(container, SWT.NONE);
+		grpResult.setText("Result");
+		grpResult.setBounds(148, 10, 286, 132);
+		grpResult.setLayout(null);
+		
+		table = new Table(grpResult, SWT.BORDER | SWT.FULL_SELECTION);
+		table.setEnabled(false);
+		table.setBounds(10, 19, 265, 104);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		
+		TableColumn tblclmnNum = new TableColumn(table, SWT.NONE);
+		tblclmnNum.setResizable(false);
+		tblclmnNum.setWidth(21);
+		tblclmnNum.setText("#");
+		
+		TableItem tableItem_0 = new TableItem(table, SWT.NONE);
+		tableItem_0.setText("1");
+		
+		TableColumn tblclmnX = new TableColumn(table, SWT.NONE);
+		tblclmnX.setResizable(false);
+		tblclmnX.setWidth(80);
+		tblclmnX.setText("X");
+		
+		TableColumn tblclmnY = new TableColumn(table, SWT.NONE);
+		tblclmnY.setWidth(80);
+		tblclmnY.setText("Y");
+		
+		TableColumn tblclmnZ = new TableColumn(table, SWT.NONE);
+		tblclmnZ.setWidth(80);
+		tblclmnZ.setText("Z");
+		
+		TableItem tableItem_1 = new TableItem(table, SWT.NONE);
+		tableItem_1.setText("2");
+		
+		TableItem tableItem_2 = new TableItem(table, SWT.NONE);
+		tableItem_2.setText("3");
+		
+		TableItem tableItem_3 = new TableItem(table, SWT.NONE);
+		tableItem_3.setText("4");
 		canvas.setBounds(13, 25, 106, 94);
 
 		return area;
