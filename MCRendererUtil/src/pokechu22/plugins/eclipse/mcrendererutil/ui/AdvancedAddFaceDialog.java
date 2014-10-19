@@ -22,14 +22,46 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	 * A canvas for creation of faces.
 	 */
 	protected class FaceCreationCanvas extends Canvas {
-		private int clickedX = -100;
-		private int clickedY = -100;
+		/**
+		 * An individual point that can be clicked on.
+		 * 
+		 * @author Pokechu22
+		 *
+		 */
+		protected class ClickPoint {
+			public ClickPoint(int clickedX, int clickedY,
+					double x, double y, double z) {
+				this.x = x;
+				this.y = y;
+				this.z = z;
+				this.clickedX = (int)clickedX;
+				this.clickedY = (int)clickedY;
+			}
+			
+			@Override
+			public String toString() {
+				return "ClickPoint [x=" + x + ", y=" + y + ", z=" + z
+						+ ", clickedX=" + clickedX + ", clickedY=" + clickedY
+						+ "]";
+			}
+
+			public double x;
+			public double y;
+			public double z;
+			public int clickedX;
+			public int clickedY;
+		}
+		
+		/**
+		 * The currently chosen point.  If null, don't draw.
+		 */
+		private ClickPoint clicked = null;
 		
 		/**
 		 * Gets the locations that can be clicked on.
 		 * @return
 		 */
-		protected int[] getClickPoints() {
+		protected ClickPoint[] getClickPoints() {
 			//X and Y constants, which are scaled.
 			final double x = (getSize().x - 40) / 4.0;
 			final double y = (getSize().y - 35) / 10.0;
@@ -57,47 +89,47 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 					(int)((10 * y) + 30)
 			};
 			
-			return new int[] {
+			return new ClickPoint[] {
 					//TopLeft corner.
-					xs[0], ys[2],
+					new ClickPoint(xs[0], ys[2], 0, 1, 0),
 					//Between TopLeft and TopTop
-					xs[1], ys[1],
+					new ClickPoint(xs[1], ys[1], 0, 1, .5),
 					//TopTop
-					xs[2], ys[0],
+					new ClickPoint(xs[2], ys[0], 0, 1, 1),
 					//TopTop and TopRight
-					xs[3], ys[1],
+					new ClickPoint(xs[3], ys[1], .5, 1, 1),
 					//TopRight
-					xs[4], ys[2],
+					new ClickPoint(xs[4], ys[2], 1, 1, 1),
 					//TopRight and TopBot
-					xs[3], ys[3],
+					new ClickPoint(xs[3], ys[3], 1, 1, .5),
 					//TopBot
-					xs[2], ys[4],
+					new ClickPoint(xs[2], ys[4], 1, 1, 0),
 					//TopBot and TopLeft
-					xs[1], ys[3],
+					new ClickPoint(xs[1], ys[3], .5, 1, 0),
 					//TopLeft and BotLeft
-					xs[0], ys[5],
+					new ClickPoint(xs[0], ys[5], 0, .5, 0),
 					//TopTop and BotTop
-					xs[2], ys[3],
+					new ClickPoint(xs[2], ys[3], 0, .5, 1),
 					//TopRight and BotRight
-					xs[4], ys[5],
+					new ClickPoint(xs[4], ys[5], 1, .5, 1),
 					//TopBot and BotBot
-					xs[2], ys[7],
+					new ClickPoint(xs[2], ys[7], 1, .5, 0),
 					//BotLeft.
-					xs[0], ys[8],
+					new ClickPoint(xs[0], ys[8], 0, 1, 0),
 					//BotLeft and BotTop
-					xs[1], ys[9],
-					//BotTop
-					xs[2], ys[10],
-					//BotTop and BotRight
-					xs[3], ys[9],
-					//BotRight
-					xs[4], ys[8],
-					//BotRight and BotBot
-					xs[3], ys[7],
-					//BotBot
-					xs[2], ys[6],
-					//BotBot and BotLeft
-					xs[1], ys[7],
+					new ClickPoint(xs[1], ys[9], 0, 1, .5),
+					//BotTop                   
+					new ClickPoint(xs[2], ys[10], 0, 1, 1),
+					//BotTop and BotRight      
+					new ClickPoint(xs[3], ys[9], .5, 1, 1),
+					//BotRight                 
+					new ClickPoint(xs[4], ys[8], 1, 1, 1),
+					//BotRight and BotBot      
+					new ClickPoint(xs[3], ys[7], 1, 1, .5),
+					//BotBot                   
+					new ClickPoint(xs[2], ys[6], 1, 1, 0),
+					//BotBot and BotLeft       
+					new ClickPoint(xs[1], ys[7], .5, 1, 0),
 			};
 		};
 		
@@ -156,31 +188,30 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 							xs[1], ys[5]);
 					
 					//Circle for current point.
-					e.gc.fillOval(clickedX - 6, clickedY - 6, 12, 12);
+					if (clicked != null) {
+						e.gc.fillOval(clicked.clickedX - 6, clicked.clickedY - 6, 12, 12);
+					}
 				}
 			});
 			
 			this.addMouseMoveListener(new MouseMoveListener() {
 				public void mouseMove(MouseEvent e) {
-					int[] clickPoints = getClickPoints();
-					for (int i = 0; i + 1 < clickPoints.length; i += 2) {
-						final int x = clickPoints[i];
-						final int y = clickPoints[i + 1];
-						
-						//Delta/distance values.
-						final int dx = x - e.x;
-						final int dy = y - e.y;
+					ClickPoint[] clickPoints = getClickPoints();
+					for (ClickPoint point : clickPoints) {
+						//Delta or distance values.
+						final int dx = point.clickedX - e.x;
+						final int dy = point.clickedY - e.y;
 						
 						//Circle distances - x^2 + y^2 < distance^2
 						if ((dx * dx) +
 								(dy * dy) <
-								(10 * 10)) {
-							clickedX = x;
-							clickedY = y;
-							
-							break;
+								(15 * 15)) {
+							clicked = point;
+							redraw();
+							return;
 						}
 					}
+					clicked = null;
 					redraw();
 				}
 			});
