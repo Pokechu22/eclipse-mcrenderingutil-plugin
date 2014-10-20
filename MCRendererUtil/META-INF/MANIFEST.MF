@@ -7,6 +7,7 @@ Bundle-Activator: pokechu22.plugins.eclipse.mcrendererutil.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
- org.eclipse.jdt.core;bundle-version="3.10.0"
+ org.eclipse.jdt.core;bundle-version="3.10.0",
+ org.eclipse.text;bundle-version="3.5.300"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
