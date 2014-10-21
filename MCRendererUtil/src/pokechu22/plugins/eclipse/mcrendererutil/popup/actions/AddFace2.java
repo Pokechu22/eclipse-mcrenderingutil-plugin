@@ -77,10 +77,12 @@ public class AddFace2 implements IObjectActionDelegate {
 			ASTRewrite rewrite = ASTRewrite.create(compilationUnit.getAST());
 
 			Block blockOld = methodASTNode.getBody();
-			Block block = methodASTNode.getAST().newBlock();
+			
+			//Create a copy of the old block.
+			AST blockAST = AST.newAST(AST.JLS8);
+			Block block = (Block) Block.copySubtree(blockAST, blockOld);
 
-			AST blockAST = block.getAST();
-			//TODO
+			//Add "System.out.println("hello" + " world");".
 			MethodInvocation methodInvocation = blockAST.newMethodInvocation();
 
 			QualifiedName name =  blockAST.newQualifiedName(
@@ -100,10 +102,6 @@ public class AddFace2 implements IObjectActionDelegate {
 			methodInvocation.arguments().add(infixExpression);
 			ExpressionStatement expressionStatement = blockAST.newExpressionStatement(methodInvocation);
 			block.statements().add(expressionStatement);
-
-
-
-			//methodASTNode.setBody(block);
 
 			rewrite.replace(blockOld, block, null);
 
