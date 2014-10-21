@@ -10,14 +10,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ASTParser;
-import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.NodeFinder;
-import org.eclipse.jdt.core.dom.NormalAnnotation;
+import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
 import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog;
@@ -80,15 +73,39 @@ public class AddFace2 implements IObjectActionDelegate {
 
 			//Convert to a MethodDeclaration.
 			MethodDeclaration methodASTNode = (MethodDeclaration)NodeFinder.perform(compilationUnit.getRoot(), methodIndex, currentMethod.getSource().length());
-			
+
 			ASTRewrite rewrite = ASTRewrite.create(compilationUnit.getAST());
-			
-			Block block = methodASTNode.getBody();
-			
+
+			Block blockOld = methodASTNode.getBody();
+			Block block = methodASTNode.getAST().newBlock();
+
 			AST blockAST = block.getAST();
 			//TODO
-			
-			rewrite.replace(methodASTNode, methodASTNode, null);
+			MethodInvocation methodInvocation = blockAST.newMethodInvocation();
+
+			QualifiedName name =  blockAST.newQualifiedName(
+					blockAST.newSimpleName("System"),
+					blockAST.newSimpleName("out"));
+
+			methodInvocation.setExpression(name);
+			methodInvocation.setName(blockAST.newSimpleName("println")); 
+			InfixExpression infixExpression = blockAST.newInfixExpression();
+			infixExpression.setOperator(InfixExpression.Operator.PLUS);
+			StringLiteral literal = blockAST.newStringLiteral();
+			literal.setLiteralValue("Hello");
+			infixExpression.setLeftOperand(literal);
+			literal = blockAST.newStringLiteral();
+			literal.setLiteralValue(" world");
+			infixExpression.setRightOperand(literal);
+			methodInvocation.arguments().add(infixExpression);
+			ExpressionStatement expressionStatement = blockAST.newExpressionStatement(methodInvocation);
+			block.statements().add(expressionStatement);
+
+
+
+			//methodASTNode.setBody(block);
+
+			rewrite.replace(blockOld, block, null);
 
 
 			// computation of the text edits
