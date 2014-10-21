@@ -9,6 +9,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
 import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog;
+import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog.ClickPoint;
 
 public class AddFace2 implements IObjectActionDelegate {
 
@@ -32,7 +33,16 @@ public class AddFace2 implements IObjectActionDelegate {
 	 * @see IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
-		new AdvancedAddFaceDialog(shell).open();
+		AdvancedAddFaceDialog d = new AdvancedAddFaceDialog(shell);
+		
+		int resultValue = d.open();
+		if (resultValue != AdvancedAddFaceDialog.OK) {
+			//Canceled.
+			return;
+		}
+		
+		ClickPoint[] result = d.getResult();
+		
 	}
 
 	/**
