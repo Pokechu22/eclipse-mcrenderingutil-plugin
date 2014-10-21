@@ -13,7 +13,9 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
+import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.NodeFinder;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
@@ -24,9 +26,9 @@ import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog.ClickPo
 public class AddFace2 implements IObjectActionDelegate {
 
 	private Shell shell;
-	
+
 	private IMethod currentMethod;
-	
+
 	/**
 	 * Constructor for Action1.
 	 */
@@ -46,17 +48,17 @@ public class AddFace2 implements IObjectActionDelegate {
 	 */
 	public void run(IAction action) {
 		AdvancedAddFaceDialog d = new AdvancedAddFaceDialog(shell);
-		
+
 		int resultValue = d.open();
 		if (resultValue != AdvancedAddFaceDialog.OK) {
 			//Canceled.
 			return;
 		}
-		
+
 		ClickPoint[] result = d.getResult();
-		
+
 		//Following is based off of http://stackoverflow.com/a/26421273/3991344 and http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Fguide%2Fjdt_api_manip.htm
-		
+
 		try {
 			ICompilationUnit cu = currentMethod.getCompilationUnit(); 
 			String source = cu.getSource();
@@ -64,38 +66,41 @@ public class AddFace2 implements IObjectActionDelegate {
 
 
 			//Get the compilation unit for traversing AST
-		    final ASTParser parser = ASTParser.newParser(AST.JLS8);
-		    parser.setSource(currentMethod.getCompilationUnit());
-		    parser.setResolveBindings(true);
+			final ASTParser parser = ASTParser.newParser(AST.JLS8);
+			parser.setSource(currentMethod.getCompilationUnit());
+			parser.setResolveBindings(true);
 
-		    final CompilationUnit compilationUnit = (CompilationUnit) parser.createAST(null);
+			final CompilationUnit compilationUnit = (CompilationUnit) parser.createAST(null);
 
-		    // record modification - to be later written with ASTRewrite
-		    compilationUnit.recordModifications();
+			// record modification - to be later written with ASTRewrite
+			compilationUnit.recordModifications();
 
-		    // Get AST node for IMethod
-		    int methodIndex = currentMethod.getCompilationUnit().getSource().indexOf(currentMethod.getSource());
+			// Get AST node for IMethod
+			int methodIndex = currentMethod.getCompilationUnit().getSource().indexOf(currentMethod.getSource());
 
-		    ASTNode methodASTNode = NodeFinder.perform(compilationUnit.getRoot(), methodIndex, currentMethod.getSource().length());
+			//Convert to a MethodDeclaration.
+			MethodDeclaration methodASTNode = (MethodDeclaration)NodeFinder.perform(compilationUnit.getRoot(), methodIndex, currentMethod.getSource().length());
+			
+			ASTRewrite rewrite = ASTRewrite.create(compilationUnit.getAST());
+			
+			Block block = methodASTNode.getBody();
+			
+			AST blockAST = block.getAST();
+			//TODO
+			
+			rewrite.replace(methodASTNode, methodASTNode, null);
 
-		    //Create the annotation
-		    final NormalAnnotation newNormalAnnotation = methodASTNode.getAST().newNormalAnnotation();
-		    newNormalAnnotation.setTypeName(methodASTNode.getAST().newName("AnnotationTest"));
-		    
-		    ASTRewrite rewrite = ASTRewrite.create(compilationUnit.getAST());
-		    rewrite.replace(methodASTNode, newNormalAnnotation, null);
-		    
 
-		    // computation of the text edits
-		    TextEdit edits = rewrite.rewriteAST(document, cu.getJavaProject().getOptions(true));
-		    
-		    // computation of the new source code
-		    edits.apply(document);
-		    String newSource = document.get();
+			// computation of the text edits
+			TextEdit edits = rewrite.rewriteAST(document, cu.getJavaProject().getOptions(true));
 
-		    // update of the compilation unit
-		    cu.getBuffer().setContents(newSource);
-		    
+			// computation of the new source code
+			edits.apply(document);
+			String newSource = document.get();
+
+			// update of the compilation unit
+			cu.getBuffer().setContents(newSource);
+
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -112,13 +117,13 @@ public class AddFace2 implements IObjectActionDelegate {
 			return;
 		}
 		IStructuredSelection sel = (IStructuredSelection) selection;
-		
+
 		if (!(sel.getFirstElement() instanceof IMethod)) {
 			//Only handles IMethods.
 			action.setEnabled(false);
 			return;
 		}
-		
+
 		action.setEnabled(true);
 		this.currentMethod = (IMethod) sel.getFirstElement();
 	}
