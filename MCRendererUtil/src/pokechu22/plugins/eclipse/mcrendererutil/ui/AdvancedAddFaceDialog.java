@@ -324,6 +324,7 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	 */
 	public AdvancedAddFaceDialog(Shell parentShell) {
 		super(parentShell);
+		setHelpAvailable(false);
 		this.shell = parentShell;
 	}
 
@@ -421,11 +422,13 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		grpVariableNames.setText("Variable Names");
 		
 		Group grpTesselator = new Group(grpVariableNames, SWT.NONE);
+		grpTesselator.setToolTipText("Enter the name that the Tesselator uses.");
 		grpTesselator.setBounds(13, 14, 96, 44);
 		grpTesselator.setText("Tesselator");
 		grpTesselator.setLayout(null);
 		
 		textTesselatorName = new Text(grpTesselator, SWT.BORDER);
+		textTesselatorName.setToolTipText("Enter the name that the Tesselator uses.");
 		textTesselatorName.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				updateVariableNames();
@@ -435,11 +438,13 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		textTesselatorName.setBounds(10, 14, 76, 19);
 		
 		Group grpX = new Group(grpVariableNames, SWT.NONE);
+		grpX.setToolTipText("Enter the name of the x-coordinate variable (part of the renderer function parameters)");
 		grpX.setLayout(null);
 		grpX.setText("X");
 		grpX.setBounds(115, 14, 96, 44);
 		
 		textX = new Text(grpX, SWT.BORDER);
+		textX.setToolTipText("Enter the name of the x-coordinate variable (part of the renderer function parameters)");
 		textX.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				updateVariableNames();
@@ -449,11 +454,13 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		textX.setBounds(10, 14, 76, 19);
 		
 		Group grpY = new Group(grpVariableNames, SWT.NONE);
+		grpY.setToolTipText("Enter the name of the y-coordinate variable (part of the renderer function parameters)");
 		grpY.setLayout(null);
 		grpY.setText("Y");
 		grpY.setBounds(215, 14, 96, 44);
 		
 		textY = new Text(grpY, SWT.BORDER);
+		textY.setToolTipText("Enter the name of the y-coordinate variable (part of the renderer function parameters)");
 		textY.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				updateVariableNames();
@@ -463,11 +470,13 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		textY.setBounds(10, 14, 76, 19);
 		
 		Group grpZ = new Group(grpVariableNames, SWT.NONE);
+		grpZ.setToolTipText("Enter the name of the z-coordinate variable (part of the renderer function parameters)");
 		grpZ.setLayout(null);
 		grpZ.setText("Z");
 		grpZ.setBounds(317, 14, 97, 44);
 		
 		textZ = new Text(grpZ, SWT.BORDER);
+		textZ.setToolTipText("Enter the name of the z-coordinate variable (part of the renderer function parameters)");
 		textZ.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				updateVariableNames();
@@ -477,11 +486,13 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		textZ.setBounds(10, 14, 77, 19);
 		
 		Group grpMinimumU = new Group(grpVariableNames, SWT.NONE);
+		grpMinimumU.setToolTipText("Enter the minimum U coordinate (U and V are texture coordinates)");
 		grpMinimumU.setLayout(null);
 		grpMinimumU.setText("Minimum U");
 		grpMinimumU.setBounds(13, 64, 96, 44);
 		
 		textMinU = new Text(grpMinimumU, SWT.BORDER);
+		textMinU.setToolTipText("Enter the minimum U coordinate (U and V are texture coordinates)");
 		textMinU.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				updateVariableNames();
@@ -491,11 +502,13 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		textMinU.setBounds(10, 14, 76, 19);
 		
 		Group grpMaximumU = new Group(grpVariableNames, SWT.NONE);
+		grpMaximumU.setToolTipText("Enter the maximum U coordinate (U and V are texture coordinates)");
 		grpMaximumU.setLayout(null);
 		grpMaximumU.setText("Maximum U");
 		grpMaximumU.setBounds(115, 64, 96, 44);
 		
 		textMaxU = new Text(grpMaximumU, SWT.BORDER);
+		textMaxU.setToolTipText("Enter the maximum U coordinate (U and V are texture coordinates)");
 		textMaxU.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				updateVariableNames();
@@ -505,11 +518,13 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		textMaxU.setBounds(10, 14, 76, 19);
 		
 		Group grpMinimumV = new Group(grpVariableNames, SWT.NONE);
+		grpMinimumV.setToolTipText("Enter the minimum V coordinate (U and V are texture coordinates)");
 		grpMinimumV.setLayout(null);
 		grpMinimumV.setText("Minimum V");
 		grpMinimumV.setBounds(215, 64, 96, 44);
 		
 		textMinV = new Text(grpMinimumV, SWT.BORDER);
+		textMinV.setToolTipText("Enter the minimum V coordinate (U and V are texture coordinates)");
 		textMinV.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				updateVariableNames();
@@ -519,11 +534,13 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		textMinV.setBounds(10, 14, 76, 19);
 		
 		Group grpMaximumV = new Group(grpVariableNames, SWT.NONE);
+		grpMaximumV.setToolTipText("Enter the maximum V coordinate (U and V are texture coordinates)");
 		grpMaximumV.setLayout(null);
 		grpMaximumV.setText("Maximum V");
 		grpMaximumV.setBounds(317, 64, 97, 44);
 		
 		textMaxV = new Text(grpMaximumV, SWT.BORDER);
+		textMaxV.setToolTipText("Enter the maximum V coordinate (U and V are texture coordinates)");
 		textMaxV.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				updateVariableNames();
