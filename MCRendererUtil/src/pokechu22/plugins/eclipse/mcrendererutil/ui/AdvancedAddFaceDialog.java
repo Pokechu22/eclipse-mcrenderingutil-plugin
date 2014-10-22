@@ -25,6 +25,8 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.ModifyEvent;
 
 public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	
@@ -302,6 +304,8 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	
 	private final Shell shell;
 	
+	private VariableNames names;
+	
 	private FaceCreationCanvas canvas;
 	private Table table;
 	
@@ -422,6 +426,11 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		grpTesselator.setLayout(null);
 		
 		textTesselatorName = new Text(grpTesselator, SWT.BORDER);
+		textTesselatorName.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				updateVariableNames();
+			}
+		});
 		textTesselatorName.setText("t");
 		textTesselatorName.setBounds(10, 14, 76, 19);
 		
@@ -431,6 +440,11 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		grpX.setBounds(115, 14, 96, 44);
 		
 		textX = new Text(grpX, SWT.BORDER);
+		textX.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				updateVariableNames();
+			}
+		});
 		textX.setText("x");
 		textX.setBounds(10, 14, 76, 19);
 		
@@ -440,6 +454,11 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		grpY.setBounds(215, 14, 96, 44);
 		
 		textY = new Text(grpY, SWT.BORDER);
+		textY.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				updateVariableNames();
+			}
+		});
 		textY.setText("y");
 		textY.setBounds(10, 14, 76, 19);
 		
@@ -449,6 +468,11 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		grpZ.setBounds(317, 14, 97, 44);
 		
 		textZ = new Text(grpZ, SWT.BORDER);
+		textZ.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				updateVariableNames();
+			}
+		});
 		textZ.setText("z");
 		textZ.setBounds(10, 14, 77, 19);
 		
@@ -458,6 +482,11 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		grpMinimumU.setBounds(13, 64, 96, 44);
 		
 		textMinU = new Text(grpMinimumU, SWT.BORDER);
+		textMinU.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				updateVariableNames();
+			}
+		});
 		textMinU.setText("minU");
 		textMinU.setBounds(10, 14, 76, 19);
 		
@@ -467,6 +496,11 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		grpMaximumU.setBounds(115, 64, 96, 44);
 		
 		textMaxU = new Text(grpMaximumU, SWT.BORDER);
+		textMaxU.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				updateVariableNames();
+			}
+		});
 		textMaxU.setText("maxU");
 		textMaxU.setBounds(10, 14, 76, 19);
 		
@@ -476,6 +510,11 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		grpMinimumV.setBounds(215, 64, 96, 44);
 		
 		textMinV = new Text(grpMinimumV, SWT.BORDER);
+		textMinV.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				updateVariableNames();
+			}
+		});
 		textMinV.setText("minV");
 		textMinV.setBounds(10, 14, 76, 19);
 		
@@ -485,6 +524,11 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		grpMaximumV.setBounds(317, 64, 97, 44);
 		
 		textMaxV = new Text(grpMaximumV, SWT.BORDER);
+		textMaxV.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				updateVariableNames();
+			}
+		});
 		textMaxV.setText("maxV");
 		textMaxV.setBounds(10, 14, 77, 19);
 		canvas.setBounds(13, 25, 106, 94);
@@ -529,14 +573,22 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	 * @return
 	 */
 	public VariableNames getVariableNames() {
-		return new VariableNames(
-				textTesselatorName.getText(),
-				textX.getText(),
-				textY.getText(),
-				textZ.getText(),
-				textMinU.getText(),
-				textMaxU.getText(),
-				textMinV.getText(),
-				textMaxV.getText());
+		return names;
+	}
+	
+	/**
+	 * Updates the cached variable names.  Called when text is changed.
+	 */
+	private void updateVariableNames() {
+		//Due to initialization stuff, null tests are needed.  Sigh.
+		this.names = new VariableNames(
+				textTesselatorName != null ? textTesselatorName.getText() : "",
+				textX != null ? textX.getText() : "",
+				textY != null ? textY.getText() : "",
+				textZ != null ? textZ.getText() : "",
+				textMinU != null ? textMinU.getText() : "",
+				textMaxU != null ? textMaxU.getText() : "",
+				textMinV != null ? textMinV.getText() : "",
+				textMaxV != null ? textMaxV.getText() : "");
 	}
 }
