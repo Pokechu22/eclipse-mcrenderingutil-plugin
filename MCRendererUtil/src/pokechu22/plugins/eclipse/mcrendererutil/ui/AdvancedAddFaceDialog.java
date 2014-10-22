@@ -59,6 +59,36 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	}
 	
 	/**
+	 * Contains names of variables used in faces.
+	 * 
+	 * @author Pokechu22
+	 *
+	 */
+	public static class VariableNames {
+		public VariableNames(String tesselator, String x, String y, String z,
+				String minU, String maxU, String minV, String maxV) {
+			this.tesselator = tesselator;
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.minU = minU;
+			this.maxU = maxU;
+			this.minV = minV;
+			this.maxV = maxV;
+		}
+		
+		public String tesselator;
+		public String x;
+		public String y;
+		public String z;
+		
+		public String minU;
+		public String maxU;
+		public String minV;
+		public String maxV;
+	}
+	
+	/**
 	 * A canvas for creation of faces.
 	 */
 	protected class FaceCreationCanvas extends Canvas {
@@ -274,6 +304,7 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	
 	private FaceCreationCanvas canvas;
 	private Table table;
+	
 	private Text textTesselatorName;
 	private Text textX;
 	private Text textY;
@@ -491,5 +522,21 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 			return null;
 		}
 		return canvas.points;
+	}
+	
+	/**
+	 * Gets the variable names used.
+	 * @return
+	 */
+	public VariableNames getVariableNames() {
+		return new VariableNames(
+				textTesselatorName.getText(),
+				textX.getText(),
+				textY.getText(),
+				textZ.getText(),
+				textMinU.getText(),
+				textMaxU.getText(),
+				textMinV.getText(),
+				textMaxV.getText());
 	}
 }
