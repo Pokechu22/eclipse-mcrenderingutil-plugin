@@ -21,6 +21,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.widgets.Text;
 
 public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	
@@ -270,6 +274,10 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	
 	private FaceCreationCanvas canvas;
 	private Table table;
+	private Text textTesselatorName;
+	private Text textX;
+	private Text textY;
+	private Text textZ;
 	
 	/**
 	 * Create the dialog.
@@ -290,12 +298,18 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		setTitle("Add face");
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
+		container.setLayout(new FormLayout());
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		//Custom control inside which doesn't like rendering ;(
 		Group grpChoosePoints = new Group(container, SWT.NONE);
+		FormData fd_grpChoosePoints = new FormData();
+		fd_grpChoosePoints.bottom = new FormAttachment(0, 142);
+		fd_grpChoosePoints.right = new FormAttachment(0, 142);
+		fd_grpChoosePoints.top = new FormAttachment(0, 10);
+		fd_grpChoosePoints.left = new FormAttachment(0, 10);
+		grpChoosePoints.setLayoutData(fd_grpChoosePoints);
 		grpChoosePoints.setText("Choose Points");
-		grpChoosePoints.setBounds(10, 10, 132, 132);
 		grpChoosePoints.setLayout(null);
 		
 		canvas = new FaceCreationCanvas(grpChoosePoints, SWT.NONE) {
@@ -313,8 +327,13 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		};
 		
 		Group grpResult = new Group(container, SWT.NONE);
+		FormData fd_grpResult = new FormData();
+		fd_grpResult.bottom = new FormAttachment(0, 142);
+		fd_grpResult.right = new FormAttachment(0, 434);
+		fd_grpResult.top = new FormAttachment(0, 10);
+		fd_grpResult.left = new FormAttachment(0, 148);
+		grpResult.setLayoutData(fd_grpResult);
 		grpResult.setText("Result");
-		grpResult.setBounds(148, 10, 286, 132);
 		grpResult.setLayout(null);
 		
 		table = new Table(grpResult, SWT.BORDER | SWT.VIRTUAL);
@@ -351,6 +370,52 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		
 		TableItem tableItem_3 = new TableItem(table, SWT.NONE);
 		tableItem_3.setText("4");
+		
+		Group grpVariableNames = new Group(container, SWT.NONE);
+		grpVariableNames.setLayout(null);
+		FormData fd_grpVariableNames = new FormData();
+		fd_grpVariableNames.bottom = new FormAttachment(0, 216);
+		fd_grpVariableNames.right = new FormAttachment(0, 434);
+		fd_grpVariableNames.top = new FormAttachment(0, 148);
+		fd_grpVariableNames.left = new FormAttachment(0, 10);
+		grpVariableNames.setLayoutData(fd_grpVariableNames);
+		grpVariableNames.setText("Variable Names");
+		
+		Group grpTesselator = new Group(grpVariableNames, SWT.NONE);
+		grpTesselator.setBounds(13, 14, 96, 44);
+		grpTesselator.setText("Tesselator");
+		grpTesselator.setLayout(null);
+		
+		textTesselatorName = new Text(grpTesselator, SWT.BORDER);
+		textTesselatorName.setText("t");
+		textTesselatorName.setBounds(10, 14, 76, 19);
+		
+		Group grpX = new Group(grpVariableNames, SWT.NONE);
+		grpX.setLayout(null);
+		grpX.setText("X");
+		grpX.setBounds(115, 14, 96, 44);
+		
+		textX = new Text(grpX, SWT.BORDER);
+		textX.setText("x");
+		textX.setBounds(10, 14, 76, 19);
+		
+		Group grpY = new Group(grpVariableNames, SWT.NONE);
+		grpY.setLayout(null);
+		grpY.setText("Y");
+		grpY.setBounds(215, 14, 96, 44);
+		
+		textY = new Text(grpY, SWT.BORDER);
+		textY.setText("y");
+		textY.setBounds(10, 14, 76, 19);
+		
+		Group grpZ = new Group(grpVariableNames, SWT.NONE);
+		grpZ.setLayout(null);
+		grpZ.setText("Z");
+		grpZ.setBounds(317, 14, 97, 44);
+		
+		textZ = new Text(grpZ, SWT.BORDER);
+		textZ.setText("z");
+		textZ.setBounds(10, 14, 77, 19);
 		canvas.setBounds(13, 25, 106, 94);
 		
 		return area;
@@ -374,7 +439,7 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 300);
+		return new Point(450, 364);
 	}
 	
 	/**
