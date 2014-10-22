@@ -27,6 +27,7 @@ import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 
 public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	
@@ -571,6 +572,9 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		Button button = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
 				true);
 		button.setEnabled(false);
+		
+		ControlDecoration controlDecoration = new ControlDecoration(button, SWT.LEFT | SWT.TOP);
+		controlDecoration.setDescriptionText("All 4 points must be entered before you can continue");
 		createButton(parent, IDialogConstants.CANCEL_ID,
 				IDialogConstants.CANCEL_LABEL, false);
 	}
