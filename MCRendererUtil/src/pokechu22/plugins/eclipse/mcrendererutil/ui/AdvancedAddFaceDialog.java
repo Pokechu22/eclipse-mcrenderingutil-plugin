@@ -343,6 +343,7 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		
 		//Custom control inside which doesn't like rendering ;(
 		Group grpChoosePoints = new Group(container, SWT.NONE);
+		grpChoosePoints.setToolTipText("Click on the different points you want to use for your new face.");
 		FormData fd_grpChoosePoints = new FormData();
 		fd_grpChoosePoints.bottom = new FormAttachment(0, 142);
 		fd_grpChoosePoints.right = new FormAttachment(0, 142);
@@ -365,8 +366,10 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 				getButton(IDialogConstants.OK_ID).setEnabled(pointsClicked == 4);
 			}
 		};
+		canvas.setToolTipText("Click on the different points you want to use for your new face.");
 		
 		Group grpResult = new Group(container, SWT.NONE);
+		grpResult.setToolTipText("The resulting coordinates that are used.  \r\n\r\nThis table cannot be modified directly but instead is configured by clicking on points on the cube to the side.  \r\n\r\nSeriously, the entire point of this plugin is so that you don't need to manually type in these numbers.  Don't try.");
 		FormData fd_grpResult = new FormData();
 		fd_grpResult.bottom = new FormAttachment(0, 142);
 		fd_grpResult.right = new FormAttachment(0, 434);
@@ -377,11 +380,13 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		grpResult.setLayout(null);
 		
 		table = new Table(grpResult, SWT.BORDER | SWT.VIRTUAL);
+		table.setToolTipText("The resulting coordinates that are used.  \r\n\r\nThis table cannot be modified directly but instead is configured by clicking on points on the cube to the side.  \r\n\r\nSeriously, the entire point of this plugin is so that you don't need to manually type in these numbers.  Don't try.");
 		table.setBounds(10, 19, 265, 104);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
 		TableColumn tblclmnNum = new TableColumn(table, SWT.NONE);
+		tblclmnNum.setToolTipText("The ID of the individual points.  The order shown here is the order the actual function will use.");
 		tblclmnNum.setResizable(false);
 		tblclmnNum.setWidth(21);
 		tblclmnNum.setText("#");
@@ -390,15 +395,18 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		tableItem_0.setText("1");
 		
 		TableColumn tblclmnX = new TableColumn(table, SWT.NONE);
+		tblclmnX.setToolTipText("The x-coordinate for the individual point.");
 		tblclmnX.setResizable(false);
 		tblclmnX.setWidth(80);
 		tblclmnX.setText("X");
 		
 		TableColumn tblclmnY = new TableColumn(table, SWT.NONE);
+		tblclmnY.setToolTipText("The y-coordinate for the individual point.");
 		tblclmnY.setWidth(80);
 		tblclmnY.setText("Y");
 		
 		TableColumn tblclmnZ = new TableColumn(table, SWT.NONE);
+		tblclmnZ.setToolTipText("The z-coordinate for the individual point.");
 		tblclmnZ.setWidth(80);
 		tblclmnZ.setText("Z");
 		
@@ -412,6 +420,7 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		tableItem_3.setText("4");
 		
 		Group grpVariableNames = new Group(container, SWT.NONE);
+		grpVariableNames.setToolTipText("Configure the names of different variables used in the output.");
 		grpVariableNames.setLayout(null);
 		FormData fd_grpVariableNames = new FormData();
 		fd_grpVariableNames.bottom = new FormAttachment(0, 266);
