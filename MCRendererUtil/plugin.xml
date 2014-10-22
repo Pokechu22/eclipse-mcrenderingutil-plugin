@@ -6,21 +6,21 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             objectClass="org.eclipse.jdt.core.IMethod"
-            id="pokechu22.plugins.eclipse.mcrendererutil.contribution1">
+            id="pokechu22.plugins.eclipse.mcrendererutil.methodContribution">
          <menu
                label="MCRendererUtil"
                path="additions"
-               id="pokechu22.plugins.eclipse.mcrendererutil.menu1">
+               id="pokechu22.plugins.eclipse.mcrendererutil.menuMain">
             <separator
-                  name="group1">
+                  name="groupMain">
             </separator>
          </menu>
          <action
                label="Add face"
                class="pokechu22.plugins.eclipse.mcrendererutil.popup.actions.AddFace"
-               menubarPath="pokechu22.plugins.eclipse.mcrendererutil.menu1/group1"
+               menubarPath="pokechu22.plugins.eclipse.mcrendererutil.menuMain/groupMain"
                enablesFor="1"
-               id="pokechu22.plugins.eclipse.mcrendererutil.newAction2">
+               id="pokechu22.plugins.eclipse.mcrendererutil.actionAddFace">
          </action>
       </objectContribution>
    </extension>
