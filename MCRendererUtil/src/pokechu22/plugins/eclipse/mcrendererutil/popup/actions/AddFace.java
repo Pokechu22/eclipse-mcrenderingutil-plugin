@@ -24,6 +24,26 @@ public class AddFace implements IObjectActionDelegate {
 	private IMethod currentMethod;
 
 	/**
+	 * Use maxU instead of minU at the specified tick.
+	 */
+	private static final boolean[] useMaxUAtTick = {
+		false,
+		true,
+		true,
+		false
+	};
+	
+	/**
+	 * Use maxV instead of minV at the specified tick.
+	 */
+	private static final boolean[] useMaxVAtTick = {
+		false,
+		false,
+		true,
+		true
+	};
+	
+	/**
 	 * Constructor for Action1.
 	 */
 	public AddFace() {
@@ -85,8 +105,7 @@ public class AddFace implements IObjectActionDelegate {
 			AST blockAST = AST.newAST(AST.JLS8);
 			Block block = (Block) Block.copySubtree(blockAST, blockOld);
 			
-			boolean useMaxU = false;
-			boolean useMaxV = false;
+			int tick = 0;
 			
 			for (ClickPoint point : result) {
 				//Add "System.out.println("hello" + " world");".
@@ -141,14 +160,12 @@ public class AddFace implements IObjectActionDelegate {
 				methodInvocation.arguments().add(infixExpression);
 				
 				//Min/Max u/v.
-				methodInvocation.arguments().add(useMaxU ? maxU : minU);
-				methodInvocation.arguments().add(useMaxV ? maxV : minV);
+				methodInvocation.arguments().add(useMaxUAtTick[tick] ? maxU : minU);
+				methodInvocation.arguments().add(useMaxVAtTick[tick] ? maxV : minV);
 				
-				//Toggles of the min/max u/v stuff.
-				useMaxU = !useMaxU;
-				if (useMaxU == false) {
-					useMaxV = !useMaxV;
-				}
+				//Cycles the tick.
+				tick++;
+				tick %= 4;
 				
 				//Actual action.
 				ExpressionStatement expressionStatement = blockAST.newExpressionStatement(methodInvocation);
