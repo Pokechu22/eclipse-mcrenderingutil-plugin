@@ -39,6 +39,7 @@ public class AddFace2 implements IObjectActionDelegate {
 	/**
 	 * @see IActionDelegate#run(IAction)
 	 */
+	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
 		AdvancedAddFaceDialog d = new AdvancedAddFaceDialog(shell);
 
@@ -141,6 +142,7 @@ public class AddFace2 implements IObjectActionDelegate {
 				methodInvocation.arguments().add(useMaxU ? minU : maxU);
 				methodInvocation.arguments().add(useMaxV ? minV : maxV);
 				
+				//Toggles of the min/max u/v stuff.
 				useMaxU = !useMaxU;
 				if (useMaxU == false) {
 					useMaxV = !useMaxV;
