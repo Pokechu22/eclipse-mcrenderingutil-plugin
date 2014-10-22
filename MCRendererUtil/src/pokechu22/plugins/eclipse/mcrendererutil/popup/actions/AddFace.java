@@ -17,7 +17,7 @@ import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog;
 import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog.ClickPoint;
 import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog.VariableNames;
 
-public class AddFace2 implements IObjectActionDelegate {
+public class AddFace implements IObjectActionDelegate {
 
 	private Shell shell;
 
@@ -26,7 +26,7 @@ public class AddFace2 implements IObjectActionDelegate {
 	/**
 	 * Constructor for Action1.
 	 */
-	public AddFace2() {
+	public AddFace() {
 		super();
 	}
 

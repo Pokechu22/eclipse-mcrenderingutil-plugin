@@ -17,7 +17,7 @@
          </menu>
          <action
                label="Add face"
-               class="pokechu22.plugins.eclipse.mcrendererutil.popup.actions.AddFace2"
+               class="pokechu22.plugins.eclipse.mcrendererutil.popup.actions.AddFace"
                menubarPath="pokechu22.plugins.eclipse.mcrendererutil.menu1/group1"
                enablesFor="1"
                id="pokechu22.plugins.eclipse.mcrendererutil.newAction2">
