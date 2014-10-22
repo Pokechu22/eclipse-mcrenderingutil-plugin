@@ -15,6 +15,7 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
 import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog;
 import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog.ClickPoint;
+import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog.VariableNames;
 
 public class AddFace2 implements IObjectActionDelegate {
 
@@ -50,6 +51,7 @@ public class AddFace2 implements IObjectActionDelegate {
 		}
 
 		ClickPoint[] result = d.getResult();
+		VariableNames names = d.getVariableNames();
 
 		//Following is based off of http://stackoverflow.com/a/26421273/3991344 and http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Fguide%2Fjdt_api_manip.htm
 
@@ -91,19 +93,19 @@ public class AddFace2 implements IObjectActionDelegate {
 				MethodInvocation methodInvocation = blockAST.newMethodInvocation();
 
 				//T is the Tesselator.
-				SimpleName name =  blockAST.newSimpleName("t");
+				SimpleName name =  blockAST.newSimpleName(names.tesselator);
 
 				methodInvocation.setExpression(name);
 				methodInvocation.setName(blockAST.newSimpleName("addVertexWithUV"));
 				
-				SimpleName x = blockAST.newSimpleName("x");
-				SimpleName y = blockAST.newSimpleName("y");
-				SimpleName z = blockAST.newSimpleName("z");
+				SimpleName x = blockAST.newSimpleName(names.x);
+				SimpleName y = blockAST.newSimpleName(names.y);
+				SimpleName z = blockAST.newSimpleName(names.z);
 				
-				SimpleName minU = blockAST.newSimpleName("minU");
-				SimpleName maxU = blockAST.newSimpleName("maxU");
-				SimpleName minV = blockAST.newSimpleName("minV");
-				SimpleName maxV = blockAST.newSimpleName("maxV");
+				SimpleName minU = blockAST.newSimpleName(names.minU);
+				SimpleName maxU = blockAST.newSimpleName(names.maxU);
+				SimpleName minV = blockAST.newSimpleName(names.minV);
+				SimpleName maxV = blockAST.newSimpleName(names.maxV);
 				
 				NumberLiteral adition;
 				InfixExpression infixExpression;
