@@ -278,6 +278,10 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	private Text textX;
 	private Text textY;
 	private Text textZ;
+	private Text textMinU;
+	private Text textMaxU;
+	private Text textMinV;
+	private Text textMaxV;
 	
 	/**
 	 * Create the dialog.
@@ -374,7 +378,7 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		Group grpVariableNames = new Group(container, SWT.NONE);
 		grpVariableNames.setLayout(null);
 		FormData fd_grpVariableNames = new FormData();
-		fd_grpVariableNames.bottom = new FormAttachment(0, 216);
+		fd_grpVariableNames.bottom = new FormAttachment(0, 266);
 		fd_grpVariableNames.right = new FormAttachment(0, 434);
 		fd_grpVariableNames.top = new FormAttachment(0, 148);
 		fd_grpVariableNames.left = new FormAttachment(0, 10);
@@ -416,6 +420,42 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		textZ = new Text(grpZ, SWT.BORDER);
 		textZ.setText("z");
 		textZ.setBounds(10, 14, 77, 19);
+		
+		Group grpMinimumU = new Group(grpVariableNames, SWT.NONE);
+		grpMinimumU.setLayout(null);
+		grpMinimumU.setText("Minimum U");
+		grpMinimumU.setBounds(13, 64, 96, 44);
+		
+		textMinU = new Text(grpMinimumU, SWT.BORDER);
+		textMinU.setText("minU");
+		textMinU.setBounds(10, 14, 76, 19);
+		
+		Group grpMaximumU = new Group(grpVariableNames, SWT.NONE);
+		grpMaximumU.setLayout(null);
+		grpMaximumU.setText("Maximum U");
+		grpMaximumU.setBounds(115, 64, 96, 44);
+		
+		textMaxU = new Text(grpMaximumU, SWT.BORDER);
+		textMaxU.setText("maxU");
+		textMaxU.setBounds(10, 14, 76, 19);
+		
+		Group grpMinimumV = new Group(grpVariableNames, SWT.NONE);
+		grpMinimumV.setLayout(null);
+		grpMinimumV.setText("Minimum V");
+		grpMinimumV.setBounds(215, 64, 96, 44);
+		
+		textMinV = new Text(grpMinimumV, SWT.BORDER);
+		textMinV.setText("minV");
+		textMinV.setBounds(10, 14, 76, 19);
+		
+		Group grpMaximumV = new Group(grpVariableNames, SWT.NONE);
+		grpMaximumV.setLayout(null);
+		grpMaximumV.setText("Maximum V");
+		grpMaximumV.setBounds(317, 64, 97, 44);
+		
+		textMaxV = new Text(grpMaximumV, SWT.BORDER);
+		textMaxV.setText("maxV");
+		textMaxV.setBounds(10, 14, 77, 19);
 		canvas.setBounds(13, 25, 106, 94);
 		
 		return area;
@@ -439,7 +479,7 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 364);
+		return new Point(450, 414);
 	}
 	
 	/**
