@@ -143,7 +143,7 @@ public class AddFace implements IObjectActionDelegate {
 				infixExpression = blockAST.newInfixExpression();
 				infixExpression.setOperator(InfixExpression.Operator.PLUS);
 				
-				adition = blockAST.newNumberLiteral(Double.toString(point.x));
+				adition = blockAST.newNumberLiteral(Double.toString(point.y));
 				infixExpression.setLeftOperand(y);
 				infixExpression.setRightOperand(adition);
 				
@@ -153,7 +153,7 @@ public class AddFace implements IObjectActionDelegate {
 				infixExpression = blockAST.newInfixExpression();
 				infixExpression.setOperator(InfixExpression.Operator.PLUS);
 				
-				adition = blockAST.newNumberLiteral(Double.toString(point.x));
+				adition = blockAST.newNumberLiteral(Double.toString(point.z));
 				infixExpression.setLeftOperand(z);
 				infixExpression.setRightOperand(adition);
 				
