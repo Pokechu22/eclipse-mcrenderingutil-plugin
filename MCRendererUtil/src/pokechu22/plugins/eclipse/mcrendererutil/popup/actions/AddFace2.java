@@ -81,28 +81,76 @@ public class AddFace2 implements IObjectActionDelegate {
 			//Create a copy of the old block.
 			AST blockAST = AST.newAST(AST.JLS8);
 			Block block = (Block) Block.copySubtree(blockAST, blockOld);
+			
+			boolean useMaxU = false;
+			boolean useMaxV = false;
+			
+			for (ClickPoint point : result) {
+				//Add "System.out.println("hello" + " world");".
+				MethodInvocation methodInvocation = blockAST.newMethodInvocation();
 
-			//Add "System.out.println("hello" + " world");".
-			MethodInvocation methodInvocation = blockAST.newMethodInvocation();
+				//T is the Tesselator.
+				SimpleName name =  blockAST.newSimpleName("t");
 
-			QualifiedName name =  blockAST.newQualifiedName(
-					blockAST.newSimpleName("System"),
-					blockAST.newSimpleName("out"));
-
-			methodInvocation.setExpression(name);
-			methodInvocation.setName(blockAST.newSimpleName("println")); 
-			InfixExpression infixExpression = blockAST.newInfixExpression();
-			infixExpression.setOperator(InfixExpression.Operator.PLUS);
-			StringLiteral literal = blockAST.newStringLiteral();
-			literal.setLiteralValue("Hello");
-			infixExpression.setLeftOperand(literal);
-			literal = blockAST.newStringLiteral();
-			literal.setLiteralValue(" world");
-			infixExpression.setRightOperand(literal);
-			methodInvocation.arguments().add(infixExpression);
-			ExpressionStatement expressionStatement = blockAST.newExpressionStatement(methodInvocation);
-			block.statements().add(expressionStatement);
-
+				methodInvocation.setExpression(name);
+				methodInvocation.setName(blockAST.newSimpleName("addVertexWithUV"));
+				
+				SimpleName x = blockAST.newSimpleName("x");
+				SimpleName y = blockAST.newSimpleName("y");
+				SimpleName z = blockAST.newSimpleName("z");
+				
+				SimpleName minU = blockAST.newSimpleName("minU");
+				SimpleName maxU = blockAST.newSimpleName("maxU");
+				SimpleName minV = blockAST.newSimpleName("minV");
+				SimpleName maxV = blockAST.newSimpleName("maxV");
+				
+				NumberLiteral adition;
+				InfixExpression infixExpression;
+				
+				//X value.
+				infixExpression = blockAST.newInfixExpression();
+				infixExpression.setOperator(InfixExpression.Operator.PLUS);
+				
+				adition = blockAST.newNumberLiteral(Double.toString(point.x));
+				infixExpression.setLeftOperand(x);
+				infixExpression.setRightOperand(adition);
+				
+				methodInvocation.arguments().add(infixExpression);
+				
+				//Y value.
+				infixExpression = blockAST.newInfixExpression();
+				infixExpression.setOperator(InfixExpression.Operator.PLUS);
+				
+				adition = blockAST.newNumberLiteral(Double.toString(point.x));
+				infixExpression.setLeftOperand(y);
+				infixExpression.setRightOperand(adition);
+				
+				methodInvocation.arguments().add(infixExpression);
+				
+				//Z value.
+				infixExpression = blockAST.newInfixExpression();
+				infixExpression.setOperator(InfixExpression.Operator.PLUS);
+				
+				adition = blockAST.newNumberLiteral(Double.toString(point.x));
+				infixExpression.setLeftOperand(z);
+				infixExpression.setRightOperand(adition);
+				
+				methodInvocation.arguments().add(infixExpression);
+				
+				//Min/Max u/v.
+				methodInvocation.arguments().add(useMaxU ? minU : maxU);
+				methodInvocation.arguments().add(useMaxV ? minV : maxV);
+				
+				useMaxU = !useMaxU;
+				if (useMaxU == false) {
+					useMaxV = !useMaxV;
+				}
+				
+				//Actual action.
+				ExpressionStatement expressionStatement = blockAST.newExpressionStatement(methodInvocation);
+				block.statements().add(expressionStatement);
+			}
+			
 			rewrite.replace(blockOld, block, null);
 
 
