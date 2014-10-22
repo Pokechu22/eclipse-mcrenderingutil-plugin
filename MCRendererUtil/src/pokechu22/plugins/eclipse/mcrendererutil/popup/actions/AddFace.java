@@ -141,8 +141,8 @@ public class AddFace implements IObjectActionDelegate {
 				methodInvocation.arguments().add(infixExpression);
 				
 				//Min/Max u/v.
-				methodInvocation.arguments().add(useMaxU ? minU : maxU);
-				methodInvocation.arguments().add(useMaxV ? minV : maxV);
+				methodInvocation.arguments().add(useMaxU ? maxU : minU);
+				methodInvocation.arguments().add(useMaxV ? maxV : minV);
 				
 				//Toggles of the min/max u/v stuff.
 				useMaxU = !useMaxU;
