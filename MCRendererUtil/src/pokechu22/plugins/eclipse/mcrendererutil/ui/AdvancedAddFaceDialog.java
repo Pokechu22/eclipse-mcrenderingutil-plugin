@@ -162,21 +162,21 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 					//TopBot and BotBot
 					new ClickPoint(xs[2], ys[7], 1, .5, 0),
 					//BotLeft.
-					new ClickPoint(xs[0], ys[8], 0, 1, 0),
+					new ClickPoint(xs[0], ys[8], 0, 0, 0),
 					//BotLeft and BotTop
-					new ClickPoint(xs[1], ys[9], 0, 1, .5),
+					new ClickPoint(xs[1], ys[9], .5, 0, 0),
 					//BotTop                   
-					new ClickPoint(xs[2], ys[10], 0, 1, 1),
+					new ClickPoint(xs[2], ys[10], 1, 0, 0),
 					//BotTop and BotRight      
-					new ClickPoint(xs[3], ys[9], .5, 1, 1),
+					new ClickPoint(xs[3], ys[9], 1, 0, .5),
 					//BotRight                 
-					new ClickPoint(xs[4], ys[8], 1, 1, 1),
+					new ClickPoint(xs[4], ys[8], 1, 0, 1),
 					//BotRight and BotBot      
-					new ClickPoint(xs[3], ys[7], 1, 1, .5),
+					new ClickPoint(xs[3], ys[7], .5, 0, 1),
 					//BotBot                   
-					new ClickPoint(xs[2], ys[6], 1, 1, 0),
+					new ClickPoint(xs[2], ys[6], 0, 0, 1),
 					//BotBot and BotLeft       
-					new ClickPoint(xs[1], ys[7], .5, 1, 0),
+					new ClickPoint(xs[1], ys[7], 0, 0, .5),
 			};
 		};
 		
