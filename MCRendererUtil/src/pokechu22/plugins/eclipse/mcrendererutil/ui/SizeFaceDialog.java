@@ -1,7 +1,5 @@
 package pokechu22.plugins.eclipse.mcrendererutil.ui;
 
-import java.util.Arrays;
-
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
