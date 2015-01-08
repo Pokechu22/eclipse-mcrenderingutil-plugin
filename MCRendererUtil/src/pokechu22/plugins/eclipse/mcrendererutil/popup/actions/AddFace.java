@@ -2,9 +2,14 @@ package pokechu22.plugins.eclipse.mcrendererutil.popup.actions;
 
 import java.text.MessageFormat;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
@@ -13,6 +18,7 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
+import pokechu22.plugins.eclipse.mcrendererutil.Activator;
 import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog;
 import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog.ClickPoint;
 import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog.VariableNames;
@@ -96,8 +102,11 @@ public class AddFace implements IObjectActionDelegate {
 			final String source = currentMethod.getSource();
 			int newLineIndex = source.lastIndexOf(System.lineSeparator());
 			if (newLineIndex <= -1) {
-				//TODO handle this.
-				throw new RuntimeException("Couldn't find newline in method!");
+				MessageDialog.openError(shell, "Could not find newline in method", 
+						"Error: Could not find a newline in the specified method \"" 
+								+ currentMethod.getSignature() + "\".  Please add " +
+								"some aditional new lines.");
+				return;
 			}
 			final String before = source.substring(0, newLineIndex);
 			final String after = source.substring(newLineIndex);
@@ -150,11 +159,17 @@ public class AddFace implements IObjectActionDelegate {
 			
 			text.append(after);
 			
-			ReplaceEdit edit = new ReplaceEdit(currentMethod.getSourceRange().getOffset(), currentMethod.getSourceRange().getLength(), text.toString());
+			ReplaceEdit edit = new ReplaceEdit(currentMethod.getSourceRange().getOffset(), 
+					currentMethod.getSourceRange().getLength(), text.toString());
 			
 			cu.applyTextEdit(edit, null);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		} catch (JavaModelException e) {
+			IStatus status = new Status(resultValue, Activator.PLUGIN_ID, 
+					"Exception caught", e);
+			
+			ErrorDialog.openError(shell, "Error: " + e.toString(), 
+					"Error editing method: " + e.toString(), status);
+			Activator.getDefault().getLog().log(status);
 		}
 
 	}
