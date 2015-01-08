@@ -1,5 +1,7 @@
 package pokechu22.plugins.eclipse.mcrendererutil.ui;
 
+import java.text.MessageFormat;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -162,21 +164,21 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 					//TopBot and BotBot
 					new ClickPoint(xs[2], ys[7], 1, .5, 0),
 					//BotLeft.
-					new ClickPoint(xs[0], ys[8], 0, 1, 0),
+					new ClickPoint(xs[0], ys[8], 0, 0, 0),
 					//BotLeft and BotTop
-					new ClickPoint(xs[1], ys[9], 0, 1, .5),
+					new ClickPoint(xs[1], ys[9], 0, 0, .5),
 					//BotTop                   
-					new ClickPoint(xs[2], ys[10], 0, 1, 1),
+					new ClickPoint(xs[2], ys[10], 0, 0, 1),
 					//BotTop and BotRight      
-					new ClickPoint(xs[3], ys[9], .5, 1, 1),
+					new ClickPoint(xs[3], ys[9], .5, 0, 1),
 					//BotRight                 
-					new ClickPoint(xs[4], ys[8], 1, 1, 1),
+					new ClickPoint(xs[4], ys[8], 1, 0, 1),
 					//BotRight and BotBot      
-					new ClickPoint(xs[3], ys[7], 1, 1, .5),
+					new ClickPoint(xs[3], ys[7], 1, 0, .5),
 					//BotBot                   
-					new ClickPoint(xs[2], ys[6], 1, 1, 0),
+					new ClickPoint(xs[2], ys[6], 1, 0, 0),
 					//BotBot and BotLeft       
-					new ClickPoint(xs[1], ys[7], .5, 1, 0),
+					new ClickPoint(xs[1], ys[7], .5, 0, 0),
 			};
 		};
 		
@@ -239,9 +241,15 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 					//Circle for current point.
 					if (clicked != null) {
 						e.gc.fillOval(clicked.clickedX - 6, clicked.clickedY - 6, 12, 12);
+						
+						e.gc.setBackground(FaceCreationCanvas.this.getBackground());
+						e.gc.drawText(MessageFormat.format("{0}, {1}, {2}", 
+								clicked.x, clicked.y, clicked.z), 0, 0, false);
 					}
 					
 					//Clicked points.
+					e.gc.setBackground(new Color(shell.getDisplay(),
+							0, 0, 0));
 					e.gc.setForeground(new Color(shell.getDisplay(),
 							63, 63, 63));
 					for (int i = 0; i < pointsClicked; i++) {
