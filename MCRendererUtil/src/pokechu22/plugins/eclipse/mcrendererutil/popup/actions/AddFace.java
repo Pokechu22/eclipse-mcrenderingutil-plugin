@@ -18,7 +18,7 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-import pokechu22.plugins.eclipse.mcrendererutil.Activator;
+import pokechu22.plugins.eclipse.mcrendererutil.MCRendererUtilPlugin;
 import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog;
 import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog.ClickPoint;
 import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog.VariableNames;
@@ -164,12 +164,12 @@ public class AddFace implements IObjectActionDelegate {
 			
 			cu.applyTextEdit(edit, null);
 		} catch (JavaModelException e) {
-			IStatus status = new Status(resultValue, Activator.PLUGIN_ID, 
+			IStatus status = new Status(resultValue, MCRendererUtilPlugin.PLUGIN_ID, 
 					"Exception caught", e);
 			
 			ErrorDialog.openError(shell, "Error: " + e.toString(), 
 					"Error editing method: " + e.toString(), status);
-			Activator.getDefault().getLog().log(status);
+			MCRendererUtilPlugin.getDefault().getLog().log(status);
 		}
 
 	}
