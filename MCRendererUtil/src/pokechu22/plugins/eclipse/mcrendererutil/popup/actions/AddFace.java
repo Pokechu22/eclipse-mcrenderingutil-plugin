@@ -102,7 +102,35 @@ public class AddFace implements IObjectActionDelegate {
 			final String before = source.substring(0, newLineIndex);
 			final String after = source.substring(newLineIndex);
 			
-			final String newLineIndent = System.lineSeparator() + "\t";
+			final String newLineIndent;
+			{
+				int prevNewLineIndex = before.lastIndexOf(System.lineSeparator()) + System.lineSeparator().length();
+				
+				StringBuilder indent = new StringBuilder("\t\t");
+				
+				int i = before.length();
+				while (i >= prevNewLineIndex) {
+					char c = source.charAt(i);
+					if (c == '\t' || c == ' ') {
+						indent.append(c);
+					} else if (System.lineSeparator().contains(c + "")) {
+						i--;
+						continue;
+					} else {
+						//Clear indent.
+						if (indent.length() != 0) {
+							indent.delete(0, indent.capacity());
+						}
+					}
+					
+					i--;
+				}
+				
+				indent.reverse();
+				indent.insert(0, System.lineSeparator());
+				
+				newLineIndent = indent.toString();
+			}
 			
 			StringBuilder text = new StringBuilder(before); 
 
