@@ -104,28 +104,32 @@ public class AddFace implements IObjectActionDelegate {
 			
 			final String newLineIndent;
 			{
-				int prevNewLineIndex = before.lastIndexOf(System.lineSeparator()) + System.lineSeparator().length();
+				//The location right after the final new line in before.
+				int prevNewLineIndex = before.lastIndexOf(System.lineSeparator()) + 
+						System.lineSeparator().length();
 				
+				//Initial value, in event that there is an empty initial line.
 				StringBuilder indent = new StringBuilder("\t\t");
 				
-				int i = before.length();
-				while (i >= prevNewLineIndex) {
+				//Goes through the full string, starting at the split point and moving to
+				//the previously found new line location.
+				for (int i = before.length(); i >= prevNewLineIndex; i--) {
 					char c = source.charAt(i);
+					
 					if (c == '\t' || c == ' ') {
 						indent.append(c);
 					} else if (System.lineSeparator().contains(c + "")) {
-						i--;
+						//If we hit a character from the newline, ignore it.
 						continue;
 					} else {
-						//Clear indent.
+						//Clear indent, as otherwise we would take stuff from other code.
 						if (indent.length() != 0) {
 							indent.delete(0, indent.capacity());
 						}
 					}
-					
-					i--;
 				}
 				
+				//Put it in proper order, and then prepend the newline text.
 				indent.reverse();
 				indent.insert(0, System.lineSeparator());
 				
