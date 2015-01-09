@@ -211,6 +211,7 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 							0, 0, 0));
 					e.gc.setForeground(new Color(shell.getDisplay(),
 							0, 0, 0));
+					e.gc.setLineWidth(1);
 					
 					//Top square
 					e.gc.drawPolygon(new int[] {
@@ -240,9 +241,16 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 					
 					//Circle for current point.
 					if (clicked != null) {
+						e.gc.setBackground(new Color(shell.getDisplay(),
+								0, 0, 127));
+						e.gc.setForeground(new Color(shell.getDisplay(),
+								0, 0, 127));
+						
 						e.gc.fillOval(clicked.clickedX - 6, clicked.clickedY - 6, 12, 12);
 						
 						e.gc.setBackground(FaceCreationCanvas.this.getBackground());
+						e.gc.setForeground(new Color(shell.getDisplay(),
+								0, 0, 0));
 						e.gc.drawText(MessageFormat.format("{0}, {1}, {2}", 
 								clicked.x, clicked.y, clicked.z), 0, 0, false);
 					}
@@ -252,10 +260,16 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 							0, 0, 0));
 					e.gc.setForeground(new Color(shell.getDisplay(),
 							63, 63, 63));
+					e.gc.setLineWidth(3);
+					
 					for (int i = 0; i < pointsClicked; i++) {
-						e.gc.fillOval(points[i].clickedX - 6, points[i].clickedY - 6, 12, 12);
 						e.gc.drawLine(points[i].clickedX, points[i].clickedY, 
 								points[(i + 1) % pointsClicked].clickedX, points[(i + 1) % pointsClicked].clickedY);
+					}
+					
+					e.gc.setLineWidth(1);
+					for (int i = 0; i < pointsClicked; i++) {
+						e.gc.fillOval(points[i].clickedX - 6, points[i].clickedY - 6, 12, 12);
 					}
 				}
 			});
