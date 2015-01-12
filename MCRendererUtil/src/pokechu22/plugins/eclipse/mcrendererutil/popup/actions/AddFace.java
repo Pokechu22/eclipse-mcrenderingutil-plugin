@@ -142,7 +142,9 @@ public class AddFace implements IObjectActionDelegate {
 				indent.reverse();
 				indent.insert(0, System.lineSeparator());
 				
+				
 				newLineIndent = indent.toString();
+				
 			}
 			
 			StringBuilder text = new StringBuilder(before); 
@@ -152,6 +154,7 @@ public class AddFace implements IObjectActionDelegate {
 			for (ClickPoint point : result) {
 				text.append(newLineIndent).append(
 						getTesselatorText(names, point.x, point.y, point.z, tick));
+				
 				//Cycles the tick.
 				tick++;
 				tick %= 4;

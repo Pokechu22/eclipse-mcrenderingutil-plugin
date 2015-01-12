@@ -166,19 +166,19 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 					//BotLeft.
 					new ClickPoint(xs[0], ys[8], 0, 0, 0),
 					//BotLeft and BotTop
-					new ClickPoint(xs[1], ys[9], 0, 0, .5),
+					new ClickPoint(xs[1], ys[9], .5, 0, 0),
 					//BotTop                   
-					new ClickPoint(xs[2], ys[10], 0, 0, 1),
+					new ClickPoint(xs[2], ys[10], 1, 0, 0),
 					//BotTop and BotRight      
-					new ClickPoint(xs[3], ys[9], .5, 0, 1),
+					new ClickPoint(xs[3], ys[9], 1, 0, .5),
 					//BotRight                 
 					new ClickPoint(xs[4], ys[8], 1, 0, 1),
 					//BotRight and BotBot      
-					new ClickPoint(xs[3], ys[7], 1, 0, .5),
+					new ClickPoint(xs[3], ys[7], .5, 0, 1),
 					//BotBot                   
-					new ClickPoint(xs[2], ys[6], 1, 0, 0),
+					new ClickPoint(xs[2], ys[6], 0, 0, 1),
 					//BotBot and BotLeft       
-					new ClickPoint(xs[1], ys[7], .5, 0, 0),
+					new ClickPoint(xs[1], ys[7], 0, 0, .5),
 			};
 		};
 		
@@ -251,6 +251,7 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 						e.gc.setBackground(FaceCreationCanvas.this.getBackground());
 						e.gc.setForeground(new Color(shell.getDisplay(),
 								0, 0, 0));
+						
 						e.gc.drawText(MessageFormat.format("{0}, {1}, {2}", 
 								clicked.x, clicked.y, clicked.z), 0, 0, false);
 					}
