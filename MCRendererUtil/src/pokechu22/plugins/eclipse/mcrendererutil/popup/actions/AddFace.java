@@ -1,18 +1,24 @@
 package pokechu22.plugins.eclipse.mcrendererutil.popup.actions;
 
+import java.text.MessageFormat;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.text.Document;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.text.edits.TextEdit;
+import org.eclipse.text.edits.ReplaceEdit;
+import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
+import pokechu22.plugins.eclipse.mcrendererutil.MCRendererUtilPlugin;
 import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog;
 import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog.ClickPoint;
 import pokechu22.plugins.eclipse.mcrendererutil.ui.AdvancedAddFaceDialog.VariableNames;
@@ -58,9 +64,26 @@ public class AddFace implements IObjectActionDelegate {
 	}
 
 	/**
+	 * Creates the text needed for a single line of tesselator code.
+	 * @param names
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param tick The current tick, used to determine min/max U and V.
+	 * @return
+	 */
+	private String getTesselatorText(VariableNames names, double x, 
+			double y, double z, int tick) {
+		return MessageFormat.format(
+				"{0}.addVertexWithUV({1} + {4}, {2} + {5}, {3} + {6}, {7}, {8});",
+				names.tesselator, names.x, names.y, names.z, x, y, z, 
+				useMaxUAtTick[tick] ? names.maxU : names.minU, 
+				useMaxVAtTick[tick] ? names.maxV : names.minV);	
+	}
+	
+	/**
 	 * @see IActionDelegate#run(IAction)
 	 */
-	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
 		AdvancedAddFaceDialog d = new AdvancedAddFaceDialog(shell);
 
@@ -72,123 +95,86 @@ public class AddFace implements IObjectActionDelegate {
 
 		ClickPoint[] result = d.getResult();
 		VariableNames names = d.getVariableNames();
-
-		//Following is based off of http://stackoverflow.com/a/26421273/3991344 and http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Fguide%2Fjdt_api_manip.htm
-
+		
 		try {
-			ICompilationUnit cu = currentMethod.getCompilationUnit(); 
-			String source = cu.getSource();
-			Document document= new Document(source);
-
-
-			//Get the compilation unit for traversing AST
-			final ASTParser parser = ASTParser.newParser(AST.JLS8);
-			parser.setSource(currentMethod.getCompilationUnit());
-			parser.setResolveBindings(true);
-
-			final CompilationUnit compilationUnit = (CompilationUnit) parser.createAST(null);
-
-			// record modification - to be later written with ASTRewrite
-			compilationUnit.recordModifications();
-
-			// Get AST node for IMethod
-			int methodIndex = currentMethod.getCompilationUnit().getSource().indexOf(currentMethod.getSource());
-
-			//Convert to a MethodDeclaration.
-			MethodDeclaration methodASTNode = (MethodDeclaration)NodeFinder.perform(compilationUnit.getRoot(), methodIndex, currentMethod.getSource().length());
-
-			ASTRewrite rewrite = ASTRewrite.create(compilationUnit.getAST());
-
-			Block blockOld = methodASTNode.getBody();
+			ICompilationUnit cu = currentMethod.getCompilationUnit();
 			
-			//Create a copy of the old block.
-			AST blockAST = AST.newAST(AST.JLS8);
-			Block block = (Block) Block.copySubtree(blockAST, blockOld);
+			final String source = currentMethod.getSource();
+			int newLineIndex = source.lastIndexOf(System.lineSeparator());
+			if (newLineIndex <= -1) {
+				MessageDialog.openError(shell, "Could not find newline in method", 
+						"Error: Could not find a newline in the specified method \"" 
+								+ currentMethod.getSignature() + "\".  Please add " +
+								"some aditional new lines.");
+				return;
+			}
+			final String before = source.substring(0, newLineIndex);
+			final String after = source.substring(newLineIndex);
 			
+			final String newLineIndent;
+			{
+				//The location right after the final new line in before.
+				int prevNewLineIndex = before.lastIndexOf(System.lineSeparator()) + 
+						System.lineSeparator().length();
+				
+				//Initial value, in event that there is an empty initial line.
+				StringBuilder indent = new StringBuilder("\t\t");
+				
+				//Goes through the full string, starting at the split point and moving to
+				//the previously found new line location.
+				for (int i = before.length(); i >= prevNewLineIndex; i--) {
+					char c = source.charAt(i);
+					
+					if (c == '\t' || c == ' ') {
+						indent.append(c);
+					} else if (System.lineSeparator().contains(c + "")) {
+						//If we hit a character from the newline, ignore it.
+						continue;
+					} else {
+						//Clear indent, as otherwise we would take stuff from other code.
+						if (indent.length() != 0) {
+							indent.delete(0, indent.capacity());
+						}
+					}
+				}
+				
+				//Put it in proper order, and then prepend the newline text.
+				indent.reverse();
+				indent.insert(0, System.lineSeparator());
+				
+				
+				newLineIndent = indent.toString();
+				
+			}
+			
+			StringBuilder text = new StringBuilder(before); 
+
 			int tick = 0;
 			
 			for (ClickPoint point : result) {
-				//Add "System.out.println("hello" + " world");".
-				MethodInvocation methodInvocation = blockAST.newMethodInvocation();
-
-				//T is the Tesselator.
-				SimpleName name =  blockAST.newSimpleName(names.tesselator);
-
-				methodInvocation.setExpression(name);
-				methodInvocation.setName(blockAST.newSimpleName("addVertexWithUV"));
+				text.append(newLineIndent).append(
+						getTesselatorText(names, point.x, point.y, point.z, tick));
 				
-				SimpleName x = blockAST.newSimpleName(names.x);
-				SimpleName y = blockAST.newSimpleName(names.y);
-				SimpleName z = blockAST.newSimpleName(names.z);
-				
-				SimpleName minU = blockAST.newSimpleName(names.minU);
-				SimpleName maxU = blockAST.newSimpleName(names.maxU);
-				SimpleName minV = blockAST.newSimpleName(names.minV);
-				SimpleName maxV = blockAST.newSimpleName(names.maxV);
-				
-				NumberLiteral adition;
-				InfixExpression infixExpression;
-				
-				//X value.
-				infixExpression = blockAST.newInfixExpression();
-				infixExpression.setOperator(InfixExpression.Operator.PLUS);
-				
-				adition = blockAST.newNumberLiteral(Double.toString(point.x));
-				infixExpression.setLeftOperand(x);
-				infixExpression.setRightOperand(adition);
-				
-				methodInvocation.arguments().add(infixExpression);
-				
-				//Y value.
-				infixExpression = blockAST.newInfixExpression();
-				infixExpression.setOperator(InfixExpression.Operator.PLUS);
-				
-				adition = blockAST.newNumberLiteral(Double.toString(point.y));
-				infixExpression.setLeftOperand(y);
-				infixExpression.setRightOperand(adition);
-				
-				methodInvocation.arguments().add(infixExpression);
-				
-				//Z value.
-				infixExpression = blockAST.newInfixExpression();
-				infixExpression.setOperator(InfixExpression.Operator.PLUS);
-				
-				adition = blockAST.newNumberLiteral(Double.toString(point.z));
-				infixExpression.setLeftOperand(z);
-				infixExpression.setRightOperand(adition);
-				
-				methodInvocation.arguments().add(infixExpression);
-				
-				//Min/Max u/v.
-				methodInvocation.arguments().add(useMaxUAtTick[tick] ? maxU : minU);
-				methodInvocation.arguments().add(useMaxVAtTick[tick] ? maxV : minV);
 				
 				//Cycles the tick.
 				tick++;
 				tick %= 4;
-				
-				//Actual action.
-				ExpressionStatement expressionStatement = blockAST.newExpressionStatement(methodInvocation);
-				block.statements().add(expressionStatement);
 			}
 			
-			rewrite.replace(blockOld, block, null);
-
-
-			// computation of the text edits
-			TextEdit edits = rewrite.rewriteAST(document, cu.getJavaProject().getOptions(true));
-
-			// computation of the new source code
-			edits.apply(document);
-			String newSource = document.get();
-
-			// update of the compilation unit
-			cu.getBuffer().setContents(newSource);
-
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+			text.append(after);
+			
+			ReplaceEdit edit = new ReplaceEdit(currentMethod.getSourceRange().getOffset(), 
+					currentMethod.getSourceRange().getLength(), text.toString());
+			
+			cu.applyTextEdit(edit, null);
+		} catch (JavaModelException e) {
+			IStatus status = new Status(resultValue, MCRendererUtilPlugin.PLUGIN_ID, 
+					"Exception caught", e);
+			
+			ErrorDialog.openError(shell, "Error: " + e.toString(), 
+					"Error editing method: " + e.toString(), status);
+			MCRendererUtilPlugin.getDefault().getLog().log(status);
 		}
-
 
 	}
 
