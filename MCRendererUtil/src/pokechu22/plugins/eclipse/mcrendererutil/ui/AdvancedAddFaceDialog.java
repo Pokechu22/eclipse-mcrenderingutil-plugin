@@ -330,6 +330,7 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 	
 	private VariableNames names;
 	
+	private Group grpResult; 
 	private FaceCreationCanvas canvas;
 	private Table table;
 	
@@ -365,7 +366,6 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 		container.setLayout(new FormLayout());
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		//Custom control inside which doesn't like rendering ;(
 		Group grpChoosePoints = new Group(container, SWT.NONE);
 		grpChoosePoints.setToolTipText("Click on the different points you want to use for your new face.");
 		FormData fd_grpChoosePoints = new FormData();
@@ -390,9 +390,21 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 				getButton(IDialogConstants.OK_ID).setEnabled(pointsClicked == 4);
 			}
 		};
+		canvas.addMouseMoveListener(new MouseMoveListener() {
+			public void mouseMove(MouseEvent arg0) {
+				if (canvas.clicked != null) {
+					grpResult.setText("Result (Selected: (" + 
+							canvas.clicked.x + "," + 
+							canvas.clicked.y + "," + 
+							canvas.clicked.z + "0))");
+				} else {
+					grpResult.setText("Result");
+				}
+			}
+		});
 		canvas.setToolTipText("Click on the different points you want to use for your new face.");
 		
-		Group grpResult = new Group(container, SWT.NONE);
+		grpResult = new Group(container, SWT.NONE);
 		grpResult.setToolTipText("The resulting coordinates that are used.  \r\n\r\nThis table cannot be modified directly but instead is configured by clicking on points on the cube to the side.  \r\n\r\nSeriously, the entire point of this plugin is so that you don't need to manually type in these numbers.  Don't try.");
 		FormData fd_grpResult = new FormData();
 		fd_grpResult.bottom = new FormAttachment(0, 142);
