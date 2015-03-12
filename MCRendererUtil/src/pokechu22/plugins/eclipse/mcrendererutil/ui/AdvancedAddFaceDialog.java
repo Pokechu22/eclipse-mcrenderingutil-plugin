@@ -306,12 +306,33 @@ public class AdvancedAddFaceDialog extends TitleAreaDialog {
 			
 			this.addMouseListener(new MouseAdapter() {
 				public void mouseDown(MouseEvent e) {
-					if (clicked != null) {
-						if (pointsClicked < 4) {
-							points[pointsClicked] = clicked;
-							pointsClicked++;
-							redraw();
+					if (e.button == 1) { //Left mouse - add point at position clicked
+						if (clicked != null) {
+							if (pointsClicked < 4) {
+								points[pointsClicked] = clicked;
+								pointsClicked++;
+								
+								redraw();
+								onPointsChange();
+							}
+						}
+					} else if (e.button == 3) { //Right mouse - add point between past two.
+						if (pointsClicked >= 2 && pointsClicked < 4) { //TODO not working
+							ClickPoint point1 = points[pointsClicked - 2];
+							ClickPoint point2 = points[pointsClicked - 1];
+							ClickPoint newPoint = new ClickPoint(
+									(point1.clickedX + point2.clickedX) / 2, 
+									(point1.clickedY + point2.clickedY) / 2, 
+									(point1.x + point2.x) / 2, 
+									(point1.y + point2.y) / 2, 
+									(point1.z + point2.z) / 2);
 							
+							points[pointsClicked] = points[pointsClicked - 1];
+							points[pointsClicked - 1] = newPoint;
+							
+							pointsClicked++;
+							
+							redraw();
 							onPointsChange();
 						}
 					}
